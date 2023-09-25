@@ -673,7 +673,6 @@ function calculateRemainingSum(card, calledNumbers) {
 let lastCalledNumber;
 const calledNumbers = [];
 const bingoCards = createBingoCards();
-// let bingoWinners = [0];
 const cardsWon = new Set();
 
 for (let i = 0; i < drawNumbers.length; i++) {
@@ -688,65 +687,18 @@ for (let i = 0; i < drawNumbers.length; i++) {
     if (isNumberMarked(bingoCard, calledNumber)) {
       markBingoCard(bingoCard, [calledNumber]);
 
-      // if (checkWin(bingoCard) && !bingoWinners[j + 1]) {
       if (checkWin(bingoCard)) {
         const remainingSum = calculateRemainingSum(bingoCard, calledNumbers);
-        // bingoWinners[j + 1] = { board: j + 1, score: remainingSum * lastCalledNumber };
-        //console.log(`Bingo! You have a first win on board ${j + 1}. Bingo Winner with score ${remainingSum * lastCalledNumber}`);
-
         cardsWon.add(j);
         total = remainingSum;
-
       }
 
       if (cardsWon.size === bingoCards.length) {
         console.log(`Final score ${total * lastCalledNumber}`);
-
-        const requestBody = {
-          answer: '21070',
-          name: 'KATERYNA'
-        };
-
-        postData("https://customer-api.krea.se/coding-tests/api/squid-game", requestBody)
-          .then(data => {
-            console.log(data);
-          })
-          .catch(error => {
-            console.log(error)
-          });
-
         return;
       }
     }
   }
 
   calledNumbers.push(calledNumber);
-}
-
-//console.log(bingoWinners);
-
-//Last board: 73
-//Final Score: 21070
-
-
-async function postData(url = "", data = {}) {
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    return response.json();
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
-  }
 }
